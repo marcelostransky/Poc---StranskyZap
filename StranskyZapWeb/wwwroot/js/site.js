@@ -5,8 +5,10 @@ const connection = new signalR.HubConnectionBuilder()
     .build();
 
 
-
+var nomeGrupo = "";
 function ConnectionStart() {
+
+
     connection.start().then(function () {
         HabilitarLogin();
         HabilitarCadastr();
@@ -14,8 +16,11 @@ function ConnectionStart() {
         console.info("Conectado");
     }).catch(
         function (err) {
-            console.error(err.toString());
-            setTimeout(ConnectionStart(), 10000);
+            if (connection.state == 0) {
+                console.error(err.toString());
+                setTimeout(ConnectionStart, 10000);
+            }
+
         }
     );
 }
@@ -53,7 +58,12 @@ function HabilitarCadastr() {
         })
     }
 }
-
+function cadastroValido() {
+    var total = document.getElementById("nome").value.length +
+        document.getElementById("email").value.length +
+        document.getElementById("senha").value.length
+    return total > 0;
+}
 function HabilitarLogin() {
 
 
@@ -92,10 +102,78 @@ if (tlConversa !== null) {
     }
 }
 function HabilitarConversa() {
-    MonitorarConnectionId();
-    MonitorarListaUsuario();
+    var tlConversa = document.getElementById("tlConversa");
+    if (tlConversa !== null) {
+        MonitorarConnectionId();
+        MonitorarListaUsuario();
+        MonitorarMensagem();
+        AbrirGrupo();
+        OffLineDetect();
+    }
 
 }
+function OffLineDetect() {
+    window.addEventListener("beforeunload", function (event) {
+        connection.invoke("DelConnectionId", GetUsuarioLogado());
+        event.returnValue = "Deslogar sua sessão";
+        //return
+    })
+}
+function AbrirGrupo() {
+    connection.on("AbrirGrupo", (nome, mensagens) => {
+        nomeGrupo = nome;
+        console.info(nomeGrupo);
+        var container = document.querySelector(".container-messages");
+        container.innerHTML = "";
+        var mensagemHtml = "";
+
+        for (i = 0; i < mensagens.length; i++) {
+            mensagemHtml += `<div class="message message-${(JSON.parse(mensagens[i].usuario).Id === GetUsuarioLogado().id) ? "right" : "left"}">
+            <div class="message-head">
+                <img src="/imagem/chat.png" />
+                ${JSON.parse(mensagens[i].usuario).Nome}
+            </div>
+            <div class="message-message">
+               ${mensagens[i].texto}
+            </div>
+ </div>
+
+`
+        }
+
+        container.innerHTML = mensagemHtml;
+
+    })
+}
+function MonitorarMensagem() {
+    var btnEnviar = document.getElementById("btnEnviar");
+
+
+    btnEnviar.addEventListener("click", function () {
+        var msg = document.getElementById("mensagem").value;
+        connection.invoke("EnviarMensagem", GetUsuarioLogado(), msg, nomeGrupo)
+        document.getElementById("mensagem").value = "";
+    });
+
+    connection.on("ReceberMensagem", (mensagemReturn) => {
+        var container = document.querySelector(".container-messages");
+        if (nomeGrupo === mensagemReturn.nomeGrupo) {
+            var mensagemHtml = `<div class="message message-${(JSON.parse(mensagemReturn.usuario).Id === GetUsuarioLogado().id) ? "right" : "left"}">
+            <div class="message-head">
+                <img src="/imagem/chat.png" />
+                ${JSON.parse(mensagemReturn.usuario).Nome}
+            </div>
+            <div class="message-message">
+               ${mensagemReturn.texto}
+            </div> </div>`
+            //var newChild = mensagemHtml
+            //container.insertAdjacentHTML('beforeend', newChild);
+            container.innerHTML += mensagemHtml;
+            //element.appendChild(container);
+        }
+    });
+}
+
 function MonitorarListaUsuario() {
     connection.invoke("ObterListaUsuario");
     connection.on("ReceberListaUsuario", function (usuarios) {
@@ -104,13 +182,24 @@ function MonitorarListaUsuario() {
             html += `<div class="container-user-item">
             <img src=${"/imagem/logo.png"} style="width: 10%;" />
             <div>
-                <span>${usuarios[i].nome} (${usuarios[i].IsOnLine ? "OnLine" : "OffLine"})</span>
+                <span>${usuarios[i].nome.split(' ')[0]} (${usuarios[i].isOnLine ? "OnLine" : "OffLine"})</span>
                 <span class="email">${usuarios[i].email}</span>
             </div>
         </div>`
         }
 
         document.getElementById("users").innerHTML = html;
+        var container = document.getElementById("users").querySelectorAll(".container-user-item");
+        for (i = 0; i < container.length; i++) {
+            container[i].addEventListener("click", (event) => {
+                var componente = event.target || event.srcElement;
+                var emailDestinatario = componente.parentElement.querySelectorAll(".email")[0].innerText;
+
+                connection.invoke("CriarOuAbrirGrupo", GetUsuarioLogado(), emailDestinatario);
+
+            })
+        }
+
     })
 }
 function MonitorarConnectionId() {
@@ -135,7 +224,7 @@ function SetUsuarioLogado(usuario) {
 }
 function DelUsuarioLogado() {
 
-    connection.invoke("DelConnectionId", GetUsuarioLogado()).then().catch();
+    connection.invoke("Logout", GetUsuarioLogado()).then().catch();
     sessionStorage.removeItem("Logado");
     window.location.href = "/Home/Login";
 }

@@ -32,13 +32,16 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: left;
-    padding: 35px 35px 0px 35px;
+    margin: 35px 35px 0px 35px;
     align-items: center;
 }
-.container-user-item span {
-    margin-left: 20px;
-    font-size: 14px;
-}
+    .container-user-item:hover{
+        cursor:pointer;
+    }
+    .container-user-item span {
+        margin-left: 20px;
+        font-size: 14px;
+    }
 .container-user-item .email {
     color: lightgray;
 }

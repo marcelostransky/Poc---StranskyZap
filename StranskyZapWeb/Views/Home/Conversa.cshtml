@@ -14,19 +14,19 @@
     </div>
     <div id="users">
         @*<div class="container-user-item">
-            <img src="~/imagem/logo.png" style="width: 20%;" />
-            <div>
-                <span>Aline (online)</span>
-                <span class="email">aline123@gmail.com</span>
+                <img src="~/imagem/logo.png" style="width: 20%;" />
+                <div>
+                    <span>Aline (online)</span>
+                    <span class="email">aline123@gmail.com</span>
+                </div>
             </div>
-        </div>
-        <div class="container-user-item">
-            <img src="~/imagem/logo.png" style="width: 20%;" />
-            <div>
-                <span>Aline (offline)</span>
-                <span class="email">aline123@gmail.com</span>
-            </div>
-        </div>*@
+            <div class="container-user-item">
+                <img src="~/imagem/logo.png" style="width: 20%;" />
+                <div>
+                    <span>Aline (offline)</span>
+                    <span class="email">aline123@gmail.com</span>
+                </div>
+            </div>*@
     </div>
 
 </div>
@@ -34,7 +34,7 @@
 <!-- Page content -->
 <div class="main" id="tlConversa">
     <div class="container-messages">
-        <div class="message message-left">
+        @*<div class="message message-left">
             <div class="message-head">
                 <img src="~/imagem/chat.png" />
                 Aline
@@ -53,13 +53,13 @@
             <div class="message-message">
                 Olá José! Como vai?
             </div>
-        </div>
+        </div>*@
 
     </div>
 
     <div class="container-button">
-        <input type="text" placeholder="Mensagem" />
-        <button class="btn-send"></button>
+        <input type="text" placeholder="Mensagem" id="mensagem" />
+        <button class="btn-send" id="btnEnviar"></button>
     </div>
 
 </div>
