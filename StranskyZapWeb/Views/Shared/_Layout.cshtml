@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - StranskZap</title>
+    <link rel="stylesheet" type="text/css" href="~/css/main.css" />
+    <title>ZapWeb</title>
+    <style type="text/css">
+        body {
+            background-color: #32A060;
+        }
+
+        input[type=text] {
+            max-width: 690px;
+        }
+    </style>
+    @RenderSection("Css", false)
+</head>
+<body>
+    @RenderBody()
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/site.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
