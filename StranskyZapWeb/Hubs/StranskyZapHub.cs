@@ -90,7 +90,7 @@ namespace StranskyZapWeb.Hubs
                     }
                     _banco.Usuarios.Update(usuarioDb);
                     await _banco.SaveChangesAsync();
-                    await AddConnectionId(usuarioDb);
+                    //await AddConnectionId(usuarioDb);
 
                 }
 
@@ -116,8 +116,8 @@ namespace StranskyZapWeb.Hubs
             var usuarioDb = _banco.Usuarios.Find(usuario.Id);
             usuarioDb.IsOnLine = false;
             _banco.Usuarios.Update(usuarioDb);
-            await _banco.SaveChangesAsync();
-            await DelConnectionId(usuario);
+            _banco.SaveChanges();
+            await DelConnectionId(usuarioDb);
         }
 
         public async Task NotificarMudancaNaListaDeUsuario()

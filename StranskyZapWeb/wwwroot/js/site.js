@@ -149,8 +149,6 @@ function AbrirGrupo() {
 }
 function MonitorarMensagem() {
     var btnEnviar = document.getElementById("btnEnviar");
-
-
     btnEnviar.addEventListener("click", function () {
         var msg = document.getElementById("mensagem").value;
         connection.invoke("EnviarMensagem", GetUsuarioLogado(), msg, nomeGrupo)
@@ -177,7 +175,6 @@ function MonitorarMensagem() {
         }
     });
 }
-
 function MonitorarListaUsuario() {
     connection.invoke("ObterListaUsuario");
     connection.on("ReceberListaUsuario", function (usuarios) {
