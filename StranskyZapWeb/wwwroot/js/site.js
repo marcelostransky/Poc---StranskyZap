@@ -142,6 +142,8 @@ function AbrirGrupo() {
         }
 
         container.innerHTML = mensagemHtml;
+        var objScrDiv = document.getElementsByClassName("container-messages");
+        objScrDiv[0].scrollTop = objScrDiv[0].scrollHeight;
 
     })
 }
@@ -169,6 +171,8 @@ function MonitorarMensagem() {
             //var newChild = mensagemHtml
             //container.insertAdjacentHTML('beforeend', newChild);
             container.innerHTML += mensagemHtml;
+            var objScrDiv = document.getElementsByClassName("container-messages");
+            objScrDiv[0].scrollTop = objScrDiv[0].scrollHeight;
             //element.appendChild(container);
         }
     });
@@ -177,24 +181,29 @@ function MonitorarMensagem() {
 function MonitorarListaUsuario() {
     connection.invoke("ObterListaUsuario");
     connection.on("ReceberListaUsuario", function (usuarios) {
+
         var html = "";
         for (i = 0; i < usuarios.length; i++) {
-            html += `<div class="container-user-item">
+            if (usuarios[i].email !== GetUsuarioLogado().email) {
+                html += `<div class="container-user-item">
             <img src=${"/imagem/logo.png"} style="width: 10%;" />
             <div>
-                <span>${usuarios[i].nome.split(' ')[0]} (${usuarios[i].isOnLine ? "OnLine" : "OffLine"})</span>
-                <span class="email">${usuarios[i].email}</span>
+                <span class="nomeL">${usuarios[i].nome.split(' ')[0]} (${usuarios[i].isOnLine ? "OnLine" : "OffLine"})</span>
+                <span class="${usuarios[i].email !== GetUsuarioLogado().email ? "email" : "smail"}">${usuarios[i].email}</span>
             </div>
         </div>`
+            }
         }
 
         document.getElementById("users").innerHTML = html;
         var container = document.getElementById("users").querySelectorAll(".container-user-item");
         for (i = 0; i < container.length; i++) {
+
             container[i].addEventListener("click", (event) => {
                 var componente = event.target || event.srcElement;
                 var emailDestinatario = componente.parentElement.querySelectorAll(".email")[0].innerText;
-
+                var barraUsuario = document.getElementsByClassName("Barra_Usuario_Selecionado");
+                barraUsuario[0].innerHTML = `${componente.parentElement.querySelectorAll(".nomeL")[0].innerText} | ${componente.parentElement.querySelectorAll(".email")[0].innerText}`
                 connection.invoke("CriarOuAbrirGrupo", GetUsuarioLogado(), emailDestinatario);
 
             })

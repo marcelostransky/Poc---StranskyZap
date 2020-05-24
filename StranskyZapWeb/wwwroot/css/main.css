@@ -25,7 +25,7 @@ body {
 }
 .container-logo {
     text-align: center;
-    width: 320px;
+    width: 260px;
 }
 .container-user-item {
     color: white;
@@ -35,9 +35,24 @@ body {
     margin: 35px 35px 0px 35px;
     align-items: center;
 }
-    .container-user-item:hover{
-        cursor:pointer;
-    }
+.Barra_Usuario_Selecionado {
+    background-color: #c0c0c0;
+    height: 40px;
+    top: 0px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container-user-item:hover {
+    cursor: pointer;
+    box-shadow: 10px 10px 7px rgba(0,0,0,.7);
+    -moz-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
+    -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
+    -webkit-transform: scale(1.35);
+    -moz-transform: scale(1.35);
+    -o-transform: scale(1.35);
+}
     .container-user-item span {
         margin-left: 20px;
         font-size: 14px;
@@ -47,7 +62,7 @@ body {
 }
 .container-messages {
     overflow: auto;
-    height: calc(100vh - 80px);
+    height: calc(90vh - 70px);
 }
 .container-list {
     text-align: center;
@@ -138,14 +153,14 @@ input[type=button], .btn-send {
 /* --- SideBar --- > https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp*/
 .sidenav {
     height: 100%; /* Full-height: remove this if you want "auto" height */
-    width: 320px; /* Set the width of the sidebar */
+    width: 260px; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
     left: 0;
     background-color: #32A060; /* Black */
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 20px;
+    padding-top: 10px;
   }
   
   /* The navigation menu links */
